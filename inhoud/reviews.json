@@ -1,0 +1,23 @@
+[
+ {
+  "initialen": "AB",
+  "naam": "Naam klant",
+  "plaats": "Plaats, type woning",
+  "sterren": 5,
+  "tekst": "Plaatshouder voor een echte review. Vervang deze zodra je de eerste klus hebt opgeleverd en toestemming hebt om te citeren."
+ },
+ {
+  "initialen": "CD",
+  "naam": "Naam klant",
+  "plaats": "Plaats, type woning",
+  "sterren": 5,
+  "tekst": "Plaatshouder voor een tweede review. Vraag je klant om iets concreets te noemen, bijvoorbeeld het verschil op zolder in de zomer."
+ },
+ {
+  "initialen": "EF",
+  "naam": "Naam klant",
+  "plaats": "Plaats, type woning",
+  "sterren": 5,
+  "tekst": "Plaatshouder voor een derde review. Verwijder deze regel uit reviews.json als je er nog maar twee hebt, dat is eerlijker dan een lege plek vullen."
+ }
+]

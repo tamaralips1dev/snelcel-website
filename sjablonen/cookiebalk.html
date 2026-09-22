@@ -1,0 +1,31 @@
+<div class="cookiebalk" id="cookiebalk" hidden role="dialog" aria-modal="false"
+     aria-labelledby="cookiekop" aria-describedby="cookietekst">
+  <div class="cookiebalk__inhoud">
+    <div class="cookiebalk__tekst">
+      <h2 id="cookiekop">Cookies op deze site</h2>
+      <p id="cookietekst">Wij gebruiken cookies die nodig zijn om de site te laten werken. Daarnaast willen we graag meten hoe de site gebruikt wordt en of onze advertenties werken. Dat doen we alleen als jij daar ja op zegt.</p>
+
+      <div class="cookiebalk__keuzes" id="cookiekeuzes" hidden>
+        <label class="cookieregel">
+          <input type="checkbox" checked disabled>
+          <span><strong>Noodzakelijk</strong>Zorgt dat de site werkt en dat je keuze hier wordt onthouden. Deze staan altijd aan.</span>
+        </label>
+        <label class="cookieregel">
+          <input type="checkbox" id="cookie-statistieken">
+          <span><strong>Statistieken</strong>Meet welke pagina's worden bekeken en hoe mensen de site gebruiken. Hier valt ook de bezoekersmeting van HubSpot onder.</span>
+        </label>
+        <label class="cookieregel">
+          <input type="checkbox" id="cookie-marketing">
+          <span><strong>Marketing</strong>Maakt het mogelijk om te zien welke advertentie tot een aanvraag leidde, en om advertenties af te stemmen op je interesses.</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="cookiebalk__acties">
+      <button type="button" class="knop" data-cookies="alles">Alles toestaan</button>
+      <button type="button" class="knop knop--tweede" data-cookies="noodzakelijk">Alleen noodzakelijk</button>
+      <button type="button" class="knop knop--stil" data-cookies-instellingen>Instellingen</button>
+      <button type="button" class="knop knop--stil" data-cookies="keuze" hidden>Keuze opslaan</button>
+    </div>
+  </div>
+</div>

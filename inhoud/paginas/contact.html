@@ -1,0 +1,101 @@
+<section class="sectie sectie--kort">
+    <div class="inhoud">
+      <p class="kruimel"><a href="index.html">Home</a> &rsaquo; Contact</p>
+      <p class="label">Contact</p>
+      <h1 id="vraag-een-gratis-inspectie-aan">Vraag een gratis inspectie aan</h1>
+      <p class="leidend">Laat je gegevens achter, dan bellen we binnen twee werkdagen om een moment af te spreken. Heb je alleen een vraag? Ook daarvoor mag je gewoon bellen.</p>
+    </div>
+  </section>
+
+  <section class="sectie--kort" style="padding-top:0" id="aanvraag">
+    <div class="inhoud">
+      <div class="hero__grid" style="align-items:start">
+
+        <div>
+          <h2 id="aanvraag-of-vraag">Aanvraag of vraag</h2>
+          <form class="formulier" id="aanvraagformulier" method="post" action="" novalidate>
+            <div class="veld--rij">
+              <div class="veld">
+                <label for="voornaam">Voornaam</label>
+                <input id="voornaam" name="voornaam" type="text" autocomplete="given-name" required>
+              </div>
+              <div class="veld">
+                <label for="achternaam">Achternaam</label>
+                <input id="achternaam" name="achternaam" type="text" autocomplete="family-name" required>
+              </div>
+            </div>
+            <div class="veld--rij">
+              <div class="veld">
+                <label for="tel">Telefoonnummer</label>
+                <input id="tel" name="telefoon" type="tel" autocomplete="tel" required>
+              </div>
+              <div class="veld">
+                <label for="email">E-mailadres</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="veld">
+              <label for="bericht">Je bericht</label>
+              <textarea id="bericht" name="bericht" rows="5"
+                placeholder="Vul hier in waar je in geïnteresseerd bent en wat verder belangrijk is om te weten. Bijvoorbeeld je postcode, het bouwjaar van je woning en of het om het dakvlak of de zoldervloer gaat."></textarea>
+            </div>
+            <!-- Spamval: onzichtbaar voor mensen, bots vullen hem wel in -->
+            <div class="val" aria-hidden="true">
+              <label for="website">Website</label>
+              <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <input type="hidden" name="geopend_op" value="">
+            <button class="knop knop--groot" type="submit" style="justify-self:start">Verstuur aanvraag</button>
+            <p class="formstatus" role="status" aria-live="polite"></p>
+            <p class="hint" style="margin:0">We gebruiken je gegevens alleen om contact op te nemen over deze aanvraag en bewaren ze niet langer dan nodig. Zie onze privacyverklaring.</p>
+          </form>
+        </div>
+
+        <div>
+          <div class="kaart kaart--vlak">
+            <h3 id="direct-contact">Direct contact</h3>
+            <p style="margin-top:var(--r3)">
+              <a href="tel:{{telefoon_link}}">{{telefoon}}</a><br>
+              <a href="mailto:{{email}}">{{email}}</a>
+            </p>
+            <p style="margin-top:var(--r4);font-size:var(--t-sm)">Bereikbaar op werkdagen van 08.00 tot 18.00 uur. Staan we op een klus, dan bellen we je dezelfde dag terug.</p>
+          </div>
+
+          <div class="kaart" style="margin-top:var(--r4)">
+            <h3 id="werkgebied">Werkgebied</h3>
+            <p style="margin-top:var(--r3)">Twente, Overijssel en de Achterhoek. Onder andere Hengelo, Enschede, Oldenzaal, Almelo, Borne, Delden, Haaksbergen en Winterswijk.</p>
+            <p style="margin-top:var(--r3);font-size:var(--t-sm)">Wij rekenen geen voorrijkosten binnen dit gebied.</p>
+          </div>
+
+          <div class="kaart" style="margin-top:var(--r4)">
+            <h3 id="bedrijfsgegevens">Bedrijfsgegevens</h3>
+            <ul style="list-style:none;padding:0;margin:var(--r3) 0 0;display:grid;gap:.4rem;font-size:1rem">
+              <li>Snelcel Isolatietechniek</li>
+              <li>Vestigingsadres, plaats</li>
+              <li>KvK {{kvk}}</li>
+              <li>BTW {{btw}}</li>
+              <li>IBAN NL00 BANK 0000 0000 00</li>
+            </ul>
+          </div>
+
+          <div class="notitie" style="margin-top:var(--r4)">
+            <p>Voor bedrijven en VvE's maken we een aparte inspectieronde met een offerte per bouwdeel. Geef dat in de toelichting aan, dan plannen we er meer tijd voor in.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="sectie amber sectie--kort">
+    <div class="inhoud">
+      <p class="label">Wat er daarna gebeurt</p>
+      <h2 id="van-aanvraag-naar-afgerond-werk">Van aanvraag naar afgerond werk</h2>
+      <ol class="stappen">
+        <li><h4 id="wij-bellen">Wij bellen</h4><p>Binnen twee werkdagen, om een moment voor de inspectie af te spreken.</p></li>
+        <li><h4 id="inspectie">Inspectie</h4><p>Ongeveer een uur bij je thuis. Kosteloos en zonder verplichting.</p></li>
+        <li><h4 id="offerte">Offerte</h4><p>Binnen een week, met vaste prijs en de te verwachten isolatiewaarde.</p></li>
+        <li><h4 id="inplannen">Inplannen</h4><p>Jij bepaalt de datum. Meestal is het werk binnen één dag klaar.</p></li>
+      </ol>
+    </div>
+  </section>

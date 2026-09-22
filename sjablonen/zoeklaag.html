@@ -1,0 +1,23 @@
+<div class="zoeklaag" id="zoeklaag" hidden>
+  <div class="zoeklaag__doek" data-zoek-sluit></div>
+  <div class="zoeklaag__paneel" role="dialog" aria-modal="true" aria-label="Zoeken op de site">
+    <div class="zoeklaag__balk">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><path d="m12.8 12.8 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input type="search" id="zoekveld" placeholder="Zoek op dakisolatie, subsidie, Hengelo, dichtheid" autocomplete="off"
+             aria-controls="zoekresultaten" aria-describedby="zoekhint">
+      <button type="button" class="zoeklaag__sluit" data-zoek-sluit aria-label="Sluiten">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <p class="zoeklaag__hint" id="zoekhint">Typ minstens twee letters. Gebruik de pijltjes en Enter om te kiezen.</p>
+    <ul class="zoeklaag__uit" id="zoekresultaten" role="listbox" aria-label="Zoekresultaten"></ul>
+    <div class="zoeklaag__voet">
+      <span>Veelgezocht</span>
+      <button type="button" data-zoek-vul="dakisolatie">dakisolatie</button>
+      <button type="button" data-zoek-vul="zoldervloer">zoldervloer</button>
+      <button type="button" data-zoek-vul="subsidie">subsidie</button>
+      <button type="button" data-zoek-vul="dichtheid">dichtheid</button>
+      <button type="button" data-zoek-vul="garantie">garantie</button>
+    </div>
+  </div>
+</div>
