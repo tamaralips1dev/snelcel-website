@@ -66,11 +66,38 @@ aanpassen geldt voor alle pagina's.
 - De `{{tekens}}` vervangen door de waarden uit `bedrijf.json`
 - De reviews op de plek van `<!--LIJST:reviews-->` zetten
 - Per pagina een canonical-adres en Open Graph-gegevens
+- Per pagina de schema.org-gegevens: bedrijf, pagina, kruimelpad, en waar van
+  toepassing de dienst en de veelgestelde vragen
+- Het telefoonnummer uit de HTML-bron halen, zodat oogstbots het niet vinden
 - Het huidige menu-item aanwijzen met `aria-current`
 - `zoekindex.json` opbouwen uit alle koppen, nu 299 stuks
-- `sitemap.xml` en `robots.txt` met het domein uit `bedrijf.json`
+- `sitemap.xml` met `lastmod` per pagina, en `robots.txt`
 - De 404-pagina
 - `stijl.css`, `script.js` en de afbeeldingen kopiëren
+
+## Zoekmachines en vindbaarheid
+
+In `paginas.json` staat per pagina meer dan alleen de titel:
+
+- `kruimel` — de naam in het kruimelpad
+- `ouder` — onder welke pagina deze hangt, voor het kruimelpad in de schemagegevens
+- `beeld` — de afbeelding die meegaat als iemand de pagina deelt
+- `dienst` — alleen op dienstpagina's; zet er een `Service` in de schemagegevens bij
+
+De veelgestelde vragen worden automatisch opgepikt uit elk blok
+`<details class="vraag">`. Schrijf je een nieuwe vraag in die vorm, dan staat hij
+vanzelf in de schemagegevens.
+
+**Het telefoonnummer.** Staat `telefoon_afschermen` in `bedrijf.json` op `true`, dan
+staat het nummer niet leesbaar in de HTML. `script.js` zet het terug zodra de pagina
+laadt. Bezoekers merken er niets van; bots die geen JavaScript draaien vinden niets.
+Zonder JavaScript staat er "bel ons" en blijft het contactformulier werken. Zet het op
+`false` als je het nummer wel gewoon in de bron wilt.
+
+**Afbeeldingen.** Naast elke `.jpg` staat een `.webp`. De CSS pakt via `image-set()`
+automatisch de webp als de browser die ondersteunt, en anders de jpg. Vervang je een
+foto, maak dan ook een nieuwe `.webp` (bijvoorbeeld met `cwebp -q 68 foto.jpg -o
+foto.webp`), anders blijft de oude versie in beeld bij moderne browsers.
 
 ## Nog in te vullen
 

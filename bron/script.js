@@ -892,7 +892,7 @@ try {
       if(alle && score > 0){ treffers.push({item:item, score:score}); }
     });
     treffers.sort(function(a, b){ return b.score - a.score; });
-    return treffers.slice(0, 8).map(function(t){ return t.item; });
+    return treffers.slice(0, 40);
   }
 
   function markeer(tekst, woorden, maxLengte){
@@ -916,9 +916,36 @@ try {
 
   var huidige = [], gekozen = -1;
 
+  var MAX_PAGINAS = 5, MAX_PER_PAGINA = 3;
+
+  /* De index bevat elke kop van de site, dus \u00e9\u00e9n zoekwoord levert makkelijk
+     tien treffers op die allemaal naar dezelfde pagina wijzen. Daarom worden
+     ze per pagina gebundeld: de paginanaam \u00e9\u00e9n keer als tussenkop, daaronder
+     hooguit drie plekken op die pagina. */
+  function bundel(treffers){
+    var groepen = [], perPagina = {};
+    treffers.forEach(function(t){
+      var g = perPagina[t.item.url];
+      if(!g){
+        if(groepen.length >= MAX_PAGINAS){ return; }
+        g = perPagina[t.item.url] = {pagina: t.item.pagina, items: []};
+        groepen.push(g);
+      }
+      if(g.items.length < MAX_PER_PAGINA){ g.items.push(t.item); }
+    });
+    return groepen;
+  }
+
+  function telling(groepen){
+    var n = 0;
+    groepen.forEach(function(g){ n += g.items.length; });
+    return n + (n === 1 ? " resultaat" : " resultaten") + " op "
+      + groepen.length + (groepen.length === 1 ? " pagina" : " pagina's");
+  }
+
   function toon(vraag){
     var woorden = normaal(vraag).split(/\s+/).filter(function(w){ return w.length > 1; });
-    huidige = zoek(vraag);
+    huidige = [];
     gekozen = -1;
     uit.innerHTML = "";
 
@@ -926,22 +953,32 @@ try {
       hint.textContent = "Typ minstens twee letters. Gebruik de pijltjes en Enter om te kiezen.";
       return;
     }
-    if(!huidige.length){
+    var groepen = bundel(zoek(vraag));
+    if(!groepen.length){
       hint.textContent = "Niets gevonden voor \u201c" + vraag + "\u201d. Probeer een ander woord, of bel ons.";
       return;
     }
-    hint.textContent = huidige.length + (huidige.length === 1 ? " resultaat" : " resultaten");
+    hint.textContent = telling(groepen);
 
-    huidige.forEach(function(item){
-      var li = document.createElement("li");
-      var a = document.createElement("a");
-      a.href = item.url + "#" + item.anker;
-      a.setAttribute("role", "option");
-      a.innerHTML = '<span class="zoekresultaat__pagina">' + item.pagina + '</span>'
-        + '<span class="zoekresultaat__kop">' + markeer(item.kop, woorden, 90) + '</span>'
-        + (item.tekst ? '<span class="zoekresultaat__tekst">' + markeer(item.tekst, woorden, 150) + '</span>' : '');
-      li.appendChild(a);
-      uit.appendChild(li);
+    groepen.forEach(function(groep){
+      var kop = document.createElement("li");
+      kop.className = "zoekgroep";
+      kop.setAttribute("role", "presentation");
+      kop.textContent = groep.pagina;
+      uit.appendChild(kop);
+
+      groep.items.forEach(function(item){
+        var li = document.createElement("li");
+        li.className = "zoektreffer";
+        var a = document.createElement("a");
+        a.href = item.url + "#" + item.anker;
+        a.setAttribute("role", "option");
+        a.innerHTML = '<span class="zoekresultaat__kop">' + markeer(item.kop, woorden, 90) + '</span>'
+          + (item.tekst ? '<span class="zoekresultaat__tekst">' + markeer(item.tekst, woorden, 150) + '</span>' : '');
+        li.appendChild(a);
+        uit.appendChild(li);
+        huidige.push(item);
+      });
     });
   }
 
@@ -1029,3 +1066,33 @@ try {
   else { window.addEventListener("load", naarAnker); }
 })();
 } catch (fout) { console.error("Onderdeel werkt niet: springen naar een anker", fout); }
+
+/* ---- telefoonnummer invullen ---- */
+try {
+/* =========================================================================
+   Het telefoonnummer staat niet leesbaar in de HTML-bron, zodat bots die
+   adressen oogsten er niets vinden. Hier wordt het teruggezet: de tel:-link
+   krijgt zijn nummer en de plaatshouder zijn tekst. Zonder JavaScript blijft
+   er "bel ons" staan en werkt het contactformulier gewoon.
+   ========================================================================= */
+(function(){
+  function lees(w){
+    try { return atob(w).split("").reverse().join(""); } catch(e){ return ""; }
+  }
+  function vul(){
+    var links = document.querySelectorAll("a[data-bel]");
+    for(var i = 0; i < links.length; i++){
+      var n = lees(links[i].getAttribute("data-bel"));
+      if(n){ links[i].setAttribute("href", "tel:" + n); links[i].removeAttribute("data-bel"); }
+    }
+    var velden = document.querySelectorAll("[data-belnr]");
+    for(var j = 0; j < velden.length; j++){
+      var m = lees(velden[j].getAttribute("data-belnr"));
+      if(m){ velden[j].textContent = m; velden[j].removeAttribute("data-belnr"); }
+    }
+  }
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", vul);
+  } else { vul(); }
+})();
+} catch (fout) { console.error("Onderdeel werkt niet: telefoonnummer invullen", fout); }

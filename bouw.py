@@ -14,6 +14,8 @@ Wat het doet:
   - kopieert stijl.css, script.js en de afbeeldingen naar site/
 """
 
+import base64
+import datetime
 import json
 import os
 import re
@@ -45,6 +47,30 @@ bedrijf["domein_kort"] = re.sub(r"^https?://", "", bedrijf["domein"]).rstrip("/"
 DOMEIN = bedrijf["domein"].rstrip("/")
 
 
+def ingevuld(sleutel):
+    """Of een veld uit bedrijf.json echt is ingevuld. Een plaatshouder die
+    alleen uit nullen bestaat (00000000, NL000000000B01) telt niet mee."""
+    waarde = str(bedrijf.get(sleutel, "")).strip()
+    if not waarde:
+        return False
+    cijfers = re.sub(r"\D", "", waarde)
+    if cijfers and (set(cijfers) == {"0"} or "000000" in cijfers):
+        return False
+    return True
+
+
+def kies(tekst):
+    """Laat <!--ALS:sleutel-->...<!--/ALS--> alleen staan als het veld is
+    ingevuld. Zo verdwijnen lege of nog niet ingevulde gegevens vanzelf van
+    de site in plaats van dat er nullen komen te staan."""
+    def vervang(m):
+        if ingevuld(m.group(2)):
+            return m.group(1) + m.group(3) + m.group(4)
+        return ""
+    return re.sub(r"([ \t]*)<!--ALS:([a-z_]+)-->(.*?)<!--/ALS-->([ \t]*\n?)",
+                  vervang, tekst, flags=re.S)
+
+
 def vul(tekst):
     """Vervangt {{sleutel}} door de waarde uit bedrijf.json."""
     def vervang(m):
@@ -52,7 +78,7 @@ def vul(tekst):
         if sleutel not in bedrijf:
             raise KeyError("Onbekend teken {{%s}}. Zet hem in inhoud/bedrijf.json." % sleutel)
         return str(bedrijf[sleutel])
-    return re.sub(r"\{\{([a-z_]+)\}\}", vervang, tekst)
+    return re.sub(r"\{\{([a-z_]+)\}\}", vervang, kies(tekst))
 
 
 # ---------------------------------------------------------------- lijsten
@@ -88,6 +114,143 @@ def zet_lijsten(tekst):
     return re.sub(r"<!--LIJST:([a-z]+)-->", vervang, tekst)
 
 
+# ---------------------------------------------------------------- telefoon
+def _codeer(tekst):
+    """Omgekeerd en in base64. Geen beveiliging, wel genoeg om oogstbots
+    die alleen de HTML-bron uitlezen zonder nummer te laten vertrekken."""
+    return base64.b64encode(tekst[::-1].encode("utf-8")).decode("ascii")
+
+
+def scherm_telefoon_af(pagina):
+    """Haalt het telefoonnummer uit de HTML-bron. script.js zet het terug,
+    zodat bezoekers het gewoon zien en kunnen aantikken."""
+    if not bedrijf.get("telefoon_afschermen"):
+        return pagina
+    pagina = pagina.replace(
+        'href="tel:%s"' % bedrijf["telefoon_link"],
+        'href="#bellen" data-bel="%s"' % _codeer(bedrijf["telefoon_link"]))
+    pagina = pagina.replace(
+        bedrijf["telefoon"],
+        '<span data-belnr="%s">bel ons</span>' % _codeer(bedrijf["telefoon"]))
+    return pagina
+
+
+# ---------------------------------------------------------------- schema.org
+def kruimels(pid):
+    """Van deze pagina terug naar home, via het veld 'ouder' in paginas.json."""
+    pad, p = [], pid
+    while True:
+        pad.insert(0, p)
+        ouder = paginas[p].get("ouder")
+        if not ouder or ouder == p or ouder in pad:
+            break
+        p = ouder
+    if pad[0] != "home":
+        pad.insert(0, "home")
+    regels = []
+    for i, p in enumerate(pad, start=1):
+        b = paginas[p]["bestand"]
+        regels.append({
+            "@type": "ListItem",
+            "position": i,
+            "name": paginas[p].get("kruimel", paginas[p]["titel"].split("|")[0].strip()),
+            "item": DOMEIN + "/" + ("" if b == "index.html" else b),
+        })
+    return regels
+
+
+def vragen_uit(body):
+    """Haalt de veelgestelde vragen uit <details class="vraag"> voor FAQPage."""
+    uit = []
+    for m in re.finditer(r'<details class="vraag">\s*<summary>(.*?)</summary>\s*(.*?)</details>',
+                         body, re.S):
+        vraag = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(1))).strip()
+        antwoord = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(2))).strip()
+        if vraag and antwoord:
+            uit.append({
+                "@type": "Question",
+                "name": ht.unescape(vraag),
+                "acceptedAnswer": {"@type": "Answer", "text": ht.unescape(antwoord)},
+            })
+    return uit
+
+
+def schema(pid, url, body):
+    p = paginas[pid]
+    beeld = DOMEIN + "/afbeeldingen/" + p.get("beeld", "straat.jpg")
+    bedrijf_id = DOMEIN + "/#bedrijf"
+    site_id = DOMEIN + "/#site"
+
+    gebied = [{"@type": "AdministrativeArea", "name": n}
+              for n in ["Twente", "Overijssel", "Achterhoek"]]
+    gebied += [{"@type": "City", "name": n} for n in bedrijf.get("plaatsen", [])]
+
+    organisatie = {
+        "@type": "HomeAndConstructionBusiness",
+        "@id": bedrijf_id,
+        "name": bedrijf["naam"],
+        "url": DOMEIN + "/",
+        "logo": DOMEIN + "/afbeeldingen/logo.png",
+        "image": DOMEIN + "/afbeeldingen/straat.jpg",
+        "description": paginas["home"]["omschrijving"],
+        # Bewust zonder straat en huisnummer: alleen de plaats, de regio en
+        # het land. Genoeg om lokaal herkend te worden, zonder het huisadres
+        # machineleesbaar op straat te leggen.
+        "address": dict(
+            {"@type": "PostalAddress",
+             "addressRegion": bedrijf.get("regio", "Overijssel"),
+             "addressCountry": bedrijf.get("land", "NL")},
+            **({"addressLocality": bedrijf["plaats"]} if ingevuld("plaats") else {})),
+        "areaServed": gebied,
+        "knowsAbout": ["cellulose-isolatie", "dakisolatie", "zoldervloerisolatie",
+                       "inblaasisolatie", "ISDE-subsidie"],
+        "founder": [{"@type": "Person", "name": "Tamara"},
+                    {"@type": "Person", "name": "Mickey"}],
+    }
+    if bedrijf.get("kvk") and not set(bedrijf["kvk"]) <= {"0"}:
+        organisatie["identifier"] = {"@type": "PropertyValue", "name": "KvK",
+                                     "value": bedrijf["kvk"]}
+    if bedrijf.get("btw") and "000000000" not in bedrijf["btw"]:
+        organisatie["vatID"] = bedrijf["btw"]
+    if bedrijf.get("profielen"):
+        organisatie["sameAs"] = bedrijf["profielen"]
+    # Het telefoonnummer staat bewust niet in de schemagegevens: dat is
+    # machineleesbare tekst in de bron en dus precies wat oogstbots ophalen.
+
+    graaf = [
+        organisatie,
+        {"@type": "WebSite", "@id": site_id, "url": DOMEIN + "/",
+         "name": bedrijf["naam"], "inLanguage": "nl-NL",
+         "publisher": {"@id": bedrijf_id}},
+        {"@type": "WebPage", "@id": url + "#pagina", "url": url,
+         "name": p["titel"], "description": p["omschrijving"],
+         "inLanguage": "nl-NL", "isPartOf": {"@id": site_id},
+         "about": {"@id": bedrijf_id}, "primaryImageOfPage": beeld,
+         "breadcrumb": {"@id": url + "#kruimels"}},
+        {"@type": "BreadcrumbList", "@id": url + "#kruimels",
+         "itemListElement": kruimels(pid)},
+    ]
+
+    if p.get("dienst"):
+        graaf.append({
+            "@type": "Service", "@id": url + "#dienst",
+            "name": p["dienst"], "serviceType": p["kruimel"],
+            "description": p["omschrijving"],
+            "provider": {"@id": bedrijf_id},
+            "areaServed": gebied,
+            "url": url,
+        })
+
+    vragen = vragen_uit(body)
+    if vragen:
+        graaf.append({"@type": "FAQPage", "@id": url + "#vragen",
+                      "mainEntity": vragen})
+
+    tekst = json.dumps({"@context": "https://schema.org", "@graph": graaf},
+                       ensure_ascii=False, separators=(",", ":"))
+    return tekst.replace("</", "<\\/")
+
+
 # ---------------------------------------------------------------- navigatie
 def nav(pid):
     k = vul(lees(os.path.join(SJABLONEN, "kop.html")))
@@ -106,6 +269,10 @@ def bouw_pagina(pid):
     url = DOMEIN + "/" + ("" if pid == "home" else p["bestand"])
     titel = ht.escape(p["titel"], quote=True)
     omschrijving = ht.escape(p["omschrijving"], quote=True)
+    beeld = DOMEIN + "/afbeeldingen/" + p.get("beeld", "straat.jpg")
+    beeld_alt = ht.escape(p.get("beeld_alt", p["titel"].split("|")[0].strip()), quote=True)
+    voorladen = ('<link rel="preload" as="image" href="afbeeldingen/hero-poster.jpg"'
+                 ' fetchpriority="high">\n' if pid == "home" else "")
 
     return f"""<!DOCTYPE html>
 <html lang="nl">
@@ -115,6 +282,8 @@ def bouw_pagina(pid):
 <title>{titel}</title>
 <meta name="description" content="{omschrijving}">
 <link rel="canonical" href="{url}">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="theme-color" content="#1F4033">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_NL">
@@ -122,11 +291,19 @@ def bouw_pagina(pid):
 <meta property="og:title" content="{titel}">
 <meta property="og:description" content="{omschrijving}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{DOMEIN}/afbeeldingen/straat.jpg">
+<meta property="og:image" content="{beeld}">
+<meta property="og:image:alt" content="{beeld_alt}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{titel}">
+<meta name="twitter:description" content="{omschrijving}">
+<meta name="twitter:image" content="{beeld}">
 
 <link rel="icon" href="afbeeldingen/logo.png" type="image/png">
-<link rel="stylesheet" href="stijl.css">
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://js.hsforms.net">
+{voorladen}<link rel="stylesheet" href="stijl.css">
+
+<script type="application/ld+json">{schema(pid, url, body)}</script>
 
 <!-- Toestemming: standaard alles geweigerd. Moet boven Tag Manager staan. -->
 <script>{vul(lees(os.path.join(SJABLONEN, 'consent.js')))}</script>
@@ -232,12 +409,12 @@ def main():
 
     gebouwd = {}
     for pid in paginas:
-        gebouwd[pid] = bouw_pagina(pid)
+        gebouwd[pid] = scherm_telefoon_af(bouw_pagina(pid))
         with open(os.path.join(UIT, paginas[pid]["bestand"]), "w", encoding="utf-8") as f:
             f.write(gebouwd[pid])
 
     with open(os.path.join(UIT, "404.html"), "w", encoding="utf-8") as f:
-        f.write(bouw_404())
+        f.write(scherm_telefoon_af(bouw_404()))
 
     index = bouw_zoekindex(gebouwd)
     with open(os.path.join(UIT, "zoekindex.json"), "w", encoding="utf-8") as f:
@@ -246,13 +423,18 @@ def main():
     prioriteit = {"index.html": "1.0", "dakisolatie.html": "0.9", "zoldervloer.html": "0.9",
                   "subsidie.html": "0.8", "gemeentelijk.html": "0.8", "isde.html": "0.8",
                   "contact.html": "0.8", "samenwerken.html": "0.7", "materiaal.html": "0.7",
-                  "techniek.html": "0.7"}
+                  "techniek.html": "0.7",
+                  "privacy.html": "0.2", "voorwaarden.html": "0.2"}
     regels = []
     for pid in sorted(paginas, key=lambda p: -float(prioriteit.get(paginas[p]["bestand"], "0.5"))):
         b = paginas[pid]["bestand"]
         loc = DOMEIN + "/" + ("" if b == "index.html" else b)
-        regels.append("  <url>\n    <loc>%s</loc>\n    <changefreq>monthly</changefreq>"
-                      "\n    <priority>%s</priority>\n  </url>" % (loc, prioriteit.get(b, "0.5")))
+        bron_pad = os.path.join(INHOUD, "paginas", pid + ".html")
+        gewijzigd = datetime.date.fromtimestamp(os.path.getmtime(bron_pad)).isoformat()
+        regels.append("  <url>\n    <loc>%s</loc>\n    <lastmod>%s</lastmod>"
+                      "\n    <changefreq>monthly</changefreq>"
+                      "\n    <priority>%s</priority>\n  </url>"
+                      % (loc, gewijzigd, prioriteit.get(b, "0.5")))
     with open(os.path.join(UIT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

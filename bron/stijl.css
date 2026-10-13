@@ -355,24 +355,24 @@ figcaption{font-size:var(--t-xs);color:var(--grafiet-licht);margin-top:.5rem}
 
 .pagina[hidden]{display:none}
 .foto{width:100%;height:100%;background-size:cover;background-repeat:no-repeat;background-position:center}
-.foto--straat{background-image:url(afbeeldingen/straat.jpg);background-position:58% 62%}
-.foto--klus{background-image:url(afbeeldingen/klus.jpg);background-position:50% 45%}
-.foto--balen{background-image:url(afbeeldingen/balen.jpg);background-position:50% 60%}
-.foto--dak{background-image:url(afbeeldingen/dak.jpg);background-position:50% 40%}
-.foto--samen{background-image:url(afbeeldingen/samen.jpg);background-position:50% 45%}
-.foto--levering{background-image:url(afbeeldingen/levering.jpg);background-position:50% 60%}
-.foto--buiten{background-image:url(afbeeldingen/buiten.jpg);background-position:50% 40%}
-.foto--zolder{background-image:url(afbeeldingen/zolder.jpg);background-position:50% 45%}
-.foto--wand{background-image:url(afbeeldingen/wand.jpg);background-position:50% 45%}
-.foto--vloer{background-image:url(afbeeldingen/vloer.jpg);background-position:50% 50%}
-.foto--condens{background-image:url(afbeeldingen/condens.jpg);background-position:50% 45%}
-.foto--fabriek{background-image:url(afbeeldingen/fabriek.jpg);background-position:50% 50%}
-.foto--vergelijk{background-image:url(afbeeldingen/vergelijk.jpg);background-position:50% 50%}
-.foto--machine{background-image:url(afbeeldingen/machine.jpg);background-position:50% 55%}
-.foto--nameting{background-image:url(afbeeldingen/nameting.jpg);background-position:50% 55%}
-.foto--onderweg{background-image:url(afbeeldingen/onderweg.jpg);background-position:50% 45%}
-.foto--tamara{background-image:url(afbeeldingen/tamara.jpg);background-position:50% 22%}
-.foto--mickey{background-image:url(afbeeldingen/mickey.jpg);background-position:50% 22%}
+.foto--straat{background-image:url(afbeeldingen/straat.jpg);background-image:image-set(url(afbeeldingen/straat.webp) type("image/webp"),url(afbeeldingen/straat.jpg) type("image/jpeg"));background-position:58% 62%}
+.foto--klus{background-image:url(afbeeldingen/klus.jpg);background-image:image-set(url(afbeeldingen/klus.webp) type("image/webp"),url(afbeeldingen/klus.jpg) type("image/jpeg"));background-position:50% 45%}
+.foto--balen{background-image:url(afbeeldingen/balen.jpg);background-image:image-set(url(afbeeldingen/balen.webp) type("image/webp"),url(afbeeldingen/balen.jpg) type("image/jpeg"));background-position:50% 60%}
+.foto--dak{background-image:url(afbeeldingen/dak.jpg);background-image:image-set(url(afbeeldingen/dak.webp) type("image/webp"),url(afbeeldingen/dak.jpg) type("image/jpeg"));background-position:50% 40%}
+.foto--samen{background-image:url(afbeeldingen/samen.jpg);background-image:image-set(url(afbeeldingen/samen.webp) type("image/webp"),url(afbeeldingen/samen.jpg) type("image/jpeg"));background-position:50% 45%}
+.foto--levering{background-image:url(afbeeldingen/levering.jpg);background-image:image-set(url(afbeeldingen/levering.webp) type("image/webp"),url(afbeeldingen/levering.jpg) type("image/jpeg"));background-position:50% 60%}
+.foto--buiten{background-image:url(afbeeldingen/buiten.jpg);background-image:image-set(url(afbeeldingen/buiten.webp) type("image/webp"),url(afbeeldingen/buiten.jpg) type("image/jpeg"));background-position:50% 40%}
+.foto--zolder{background-image:url(afbeeldingen/zolder.jpg);background-image:image-set(url(afbeeldingen/zolder.webp) type("image/webp"),url(afbeeldingen/zolder.jpg) type("image/jpeg"));background-position:50% 45%}
+.foto--wand{background-image:url(afbeeldingen/wand.jpg);background-image:image-set(url(afbeeldingen/wand.webp) type("image/webp"),url(afbeeldingen/wand.jpg) type("image/jpeg"));background-position:50% 45%}
+.foto--vloer{background-image:url(afbeeldingen/vloer.jpg);background-image:image-set(url(afbeeldingen/vloer.webp) type("image/webp"),url(afbeeldingen/vloer.jpg) type("image/jpeg"));background-position:50% 50%}
+.foto--condens{background-image:url(afbeeldingen/condens.jpg);background-image:image-set(url(afbeeldingen/condens.webp) type("image/webp"),url(afbeeldingen/condens.jpg) type("image/jpeg"));background-position:50% 45%}
+.foto--fabriek{background-image:url(afbeeldingen/fabriek.jpg);background-image:image-set(url(afbeeldingen/fabriek.webp) type("image/webp"),url(afbeeldingen/fabriek.jpg) type("image/jpeg"));background-position:50% 50%}
+.foto--vergelijk{background-image:url(afbeeldingen/vergelijk.jpg);background-image:image-set(url(afbeeldingen/vergelijk.webp) type("image/webp"),url(afbeeldingen/vergelijk.jpg) type("image/jpeg"));background-position:50% 50%}
+.foto--machine{background-image:url(afbeeldingen/machine.jpg);background-image:image-set(url(afbeeldingen/machine.webp) type("image/webp"),url(afbeeldingen/machine.jpg) type("image/jpeg"));background-position:50% 55%}
+.foto--nameting{background-image:url(afbeeldingen/nameting.jpg);background-image:image-set(url(afbeeldingen/nameting.webp) type("image/webp"),url(afbeeldingen/nameting.jpg) type("image/jpeg"));background-position:50% 55%}
+.foto--onderweg{background-image:url(afbeeldingen/onderweg.jpg);background-image:image-set(url(afbeeldingen/onderweg.webp) type("image/webp"),url(afbeeldingen/onderweg.jpg) type("image/jpeg"));background-position:50% 45%}
+.foto--tamara{background-image:url(afbeeldingen/tamara.jpg);background-image:image-set(url(afbeeldingen/tamara.webp) type("image/webp"),url(afbeeldingen/tamara.jpg) type("image/jpeg"));background-position:50% 22%}
+.foto--mickey{background-image:url(afbeeldingen/mickey.jpg);background-image:image-set(url(afbeeldingen/mickey.webp) type("image/webp"),url(afbeeldingen/mickey.jpg) type("image/jpeg"));background-position:50% 22%}
 
 /* =========================================================================
    Beweging en interactie
@@ -1464,11 +1464,22 @@ body{background:var(--papier)}
 .zoeklaag__hint{margin:0;padding:var(--r4) var(--r6);font-size:var(--t-xs);
   color:var(--grafiet-licht);border-bottom:1px solid var(--vezel)}
 .zoeklaag__uit{list-style:none;margin:0;padding:0;max-width:none;overflow-y:auto;flex:1}
-.zoeklaag__uit li{border-bottom:1px solid rgba(32,37,34,.08)}
-.zoeklaag__uit button{display:block;width:100%;text-align:left;background:none;border:0;
-  padding:var(--r4) var(--r6);cursor:pointer;font:inherit;
-  transition:background .15s ease}
-.zoeklaag__uit button:hover,.zoeklaag__uit button.aan{background:var(--mos-was)}
+.zoeklaag__uit li.zoektreffer{border-bottom:1px solid rgba(32,37,34,.08)}
+.zoeklaag__uit li.zoektreffer:last-child{border-bottom:0}
+.zoeklaag__uit button,.zoeklaag__uit a{display:block;width:100%;text-align:left;background:none;border:0;
+  padding:var(--r3) var(--r6) var(--r3) calc(var(--r6) + var(--r4));cursor:pointer;font:inherit;
+  text-decoration:none;color:inherit;border-left:2px solid transparent;
+  transition:background .15s ease,border-color .15s ease}
+.zoeklaag__uit button:hover,.zoeklaag__uit button.aan,
+.zoeklaag__uit a:hover,.zoeklaag__uit a:focus-visible,.zoeklaag__uit a.aan{
+  background:var(--mos-was);border-left-color:var(--mos)}
+/* Tussenkop met de paginanaam: één keer per pagina in plaats van bij elk resultaat. */
+.zoeklaag__uit li.zoekgroep{position:sticky;top:0;z-index:1;
+  padding:var(--r3) var(--r6) .35rem;background:var(--papier);
+  font-family:var(--font-kop);font-size:var(--t-xs);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--amber-diep);
+  border-top:1px solid rgba(32,37,34,.08)}
+.zoeklaag__uit li.zoekgroep:first-child{border-top:0}
 .zoekresultaat__pagina{display:block;font-family:var(--font-kop);font-size:var(--t-xs);
   font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-diep);
   margin-bottom:.15rem}
@@ -1495,7 +1506,8 @@ body{background:var(--papier)}
   .zoeklaag__paneel{margin:0;max-width:none;height:100%;max-height:none;border-radius:0}
   .zoeklaag__balk{padding:var(--r4)}
   .zoeklaag__hint,.zoeklaag__voet{padding-left:var(--r4);padding-right:var(--r4)}
-  .zoeklaag__uit button{padding:var(--r4)}
+  .zoeklaag__uit button,.zoeklaag__uit a{padding:var(--r3) var(--r4) var(--r3) var(--r5)}
+  .zoeklaag__uit li.zoekgroep{padding-left:var(--r4);padding-right:var(--r4)}
 }
 @media(prefers-reduced-motion:reduce){
   .zoeklaag__doek,.zoeklaag__paneel{animation:none}
