@@ -47,7 +47,7 @@
             <input type="hidden" name="geopend_op" value="">
             <button class="knop knop--groot" type="submit" style="justify-self:start">Verstuur aanvraag</button>
             <p class="formstatus" role="status" aria-live="polite"></p>
-            <p class="hint" style="margin:0">We gebruiken je gegevens alleen om contact op te nemen over deze aanvraag en bewaren ze niet langer dan nodig. Zie onze privacyverklaring.</p>
+            <p class="hint" style="margin:0">We gebruiken je gegevens alleen om contact op te nemen over deze aanvraag en bewaren ze niet langer dan nodig. Zie onze <a href="privacy.html">privacyverklaring</a>.</p>
           </form>
         </div>
 
@@ -55,8 +55,7 @@
           <div class="kaart kaart--vlak">
             <h3 id="direct-contact">Direct contact</h3>
             <p style="margin-top:var(--r3)">
-              <a href="tel:{{telefoon_link}}">{{telefoon}}</a><br>
-              <a href="mailto:{{email}}">{{email}}</a>
+              <a href="tel:{{telefoon_link}}">{{telefoon}}</a>
             </p>
             <p style="margin-top:var(--r4);font-size:var(--t-sm)">Bereikbaar op werkdagen van 08.00 tot 18.00 uur. Staan we op een klus, dan bellen we je dezelfde dag terug.</p>
           </div>
@@ -71,10 +70,10 @@
             <h3 id="bedrijfsgegevens">Bedrijfsgegevens</h3>
             <ul style="list-style:none;padding:0;margin:var(--r3) 0 0;display:grid;gap:.4rem;font-size:1rem">
               <li>Snelcel Isolatietechniek</li>
-              <li>Vestigingsadres, plaats</li>
-              <li>KvK {{kvk}}</li>
-              <li>BTW {{btw}}</li>
-              <li>IBAN NL00 BANK 0000 0000 00</li>
+              <!--ALS:plaats--><li>Gevestigd in {{plaats}}</li><!--/ALS-->
+              <!--ALS:kvk--><li>KvK {{kvk}}</li><!--/ALS-->
+              <!--ALS:btw--><li>BTW {{btw}}</li><!--/ALS-->
+              <!--ALS:iban--><li>IBAN {{iban}}</li><!--/ALS-->
             </ul>
           </div>
 
